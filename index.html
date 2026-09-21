@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Custom AI Bots</title>
+  <meta name="description" content="Custom AI Bots — AI agents built for real work, including MCP-connected trading agents." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <span class="logo">Custom AI Bots</span>
+      <nav>
+        <a href="#agents">Agents</a>
+        <a href="#trading-agent">Trading Agent</a>
+        <a href="docs/robinhood-trading-agent.md">Docs</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>AI agents built for real work</h1>
+      <p>We design and deploy custom AI agents that plug into the tools you already use.</p>
+    </section>
+
+    <section id="agents">
+      <h2>What we build</h2>
+      <ul>
+        <li>Custom conversational and task-automation agents</li>
+        <li>Agents wired into your internal APIs and data</li>
+        <li>MCP (Model Context Protocol) integrations for existing agent platforms</li>
+      </ul>
+    </section>
+
+    <section id="trading-agent">
+      <h2>Robinhood Trading Agent (MCP)</h2>
+      <p>
+        This site is configured to work with a Robinhood trading agent exposed over MCP at
+        <code>https://agent.robinhood.com/mcp/trading</code>. It lets a connected agent read
+        account/portfolio data and, when explicitly authorized, place trade orders.
+      </p>
+      <p class="callout">
+        <strong>Live trading, human-in-the-loop only.</strong> No order is ever placed
+        automatically. Every trade action requires the account owner to authenticate with
+        Robinhood directly and explicitly confirm the order before it is sent. This
+        repository does not store Robinhood credentials, API keys, or session tokens.
+      </p>
+      <p>See <a href="docs/robinhood-trading-agent.md">docs/robinhood-trading-agent.md</a> for setup and the safety model.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> Custom AI Bots</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
