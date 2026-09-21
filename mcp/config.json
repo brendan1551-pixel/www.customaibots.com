@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "robinhood-trading": {
+      "url": "https://agent.robinhood.com/mcp/trading",
+      "transport": "http",
+      "description": "Robinhood trading agent exposed over MCP. Provides account/portfolio read tools and order-placement tools.",
+      "auth": {
+        "type": "oauth2",
+        "note": "Requires the account owner's own Robinhood OAuth session/token. No credentials are stored in this repository."
+      },
+      "riskLevel": "live-trading",
+      "requireHumanConfirmation": true
+    }
+  }
+}
