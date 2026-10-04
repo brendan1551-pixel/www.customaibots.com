@@ -17,5 +17,5 @@ This repo is served by GitHub Pages at https://agents.customsuperbots.com (see `
 
 ## To do
 
-- [ ] Choose an email provider for the signup form (see the comment in the `#contact` section of `index.html`)
+- [ ] Create a Buttondown account, then set `BUTTONDOWN_USER` near the bottom of `index.html` to turn on the signup form
 - [ ] Add a YouTube handle once one is set
