@@ -13,7 +13,7 @@ When a shopper who opted in to marketing leaves a checkout worth $40 or more, th
 
 | Part | Where | Cost |
 | --- | --- | --- |
-| Webhook route (Next.js) | Vercel, with Root Directory set to `cart-recovery` | Free tier |
+| Webhook route (Next.js) | Vercel at `cart.customsuperbots.com`, Root Directory `cart-recovery` | Free tier |
 | Redis | Upstash or the Redis add-on on your worker host | Free tier |
 | Worker (`npm run worker`) | Railway or Render, always on | About $5/month |
 
@@ -47,6 +47,9 @@ Create a Redis database (for example on Upstash) and copy its connection URL (`r
 1. Import this GitHub repository in Vercel and set **Root Directory** to `cart-recovery`.
 2. Add every variable from `.env.example` under Settings → Environment Variables, with your real values.
 3. Deploy. Opening the project URL should show "Cart recovery webhook is running."
+4. Put it on your domain: in Vercel, open Settings → Domains and add `cart.customsuperbots.com`. Vercel shows a CNAME record (usually `cname.vercel-dns.com`). Add that record for `cart` wherever customsuperbots.com's DNS is managed. Once Vercel shows the domain as valid, `https://cart.customsuperbots.com` shows the same "running" message.
+
+`www.customsuperbots.com` and `agents.customsuperbots.com` stay where they are. Only the new `cart` subdomain points to Vercel, because GitHub Pages can't run the webhook code.
 
 ### 5. Deploy the worker
 
