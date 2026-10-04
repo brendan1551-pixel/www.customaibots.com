@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Custom AI Bots</title>
   <meta name="description" content="Custom AI Bots — AI agents built for real work, including MCP-connected trading agents." />
+  <link rel="canonical" href="https://agents.customsuperbots.com/" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#2e7d32" />
+  <meta property="og:title" content="Custom AI Bots" />
+  <meta property="og:description" content="Custom AI Bots — AI agents built for real work, including MCP-connected trading agents." />
+  <meta property="og:url" content="https://agents.customsuperbots.com/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Organization","name":"Custom AI Bots","url":"https://agents.customsuperbots.com/","sameAs":["https://www.youtube.com/channel/UCm-zZtqIVutiaAeiqM44-aA"]}
+  </script>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -14,7 +25,9 @@
       <nav>
         <a href="#agents">Agents</a>
         <a href="#trading-agent">Trading Agent</a>
-        <a href="docs/robinhood-trading-agent.md">Docs</a>
+        <a href="alerts.html">Alerts</a>
+        <a href="https://github.com/brendan1551-pixel/www.customaibots.com/blob/main/docs/robinhood-trading-agent.md">Docs</a>
+        <a href="https://www.youtube.com/channel/UCm-zZtqIVutiaAeiqM44-aA" target="_blank" rel="noopener">YouTube</a>
       </nav>
     </div>
   </header>
@@ -23,6 +36,10 @@
     <section class="hero">
       <h1>AI agents built for real work</h1>
       <p>We design and deploy custom AI agents that plug into the tools you already use.</p>
+      <p class="actions">
+        <a class="btn" href="alerts.html">See today's volume alerts</a>
+        <a class="btn btn-secondary" href="https://www.youtube.com/channel/UCm-zZtqIVutiaAeiqM44-aA" target="_blank" rel="noopener">Watch on YouTube</a>
+      </p>
     </section>
 
     <section id="agents">
@@ -32,6 +49,17 @@
         <li>Agents wired into your internal APIs and data</li>
         <li>MCP (Model Context Protocol) integrations for existing agent platforms</li>
       </ul>
+    </section>
+
+    <section id="alerts">
+      <h2>Daily volume alerts</h2>
+      <p>
+        Our free daily screen ranks the most-active US stocks by volume and shows relative volume
+        against the 20-day average. Each ticker gets a High or Watch alert level, along with the
+        news behind the move.
+      </p>
+      <p><a href="alerts.html">Open the volume alerts</a></p>
+      <p>New alert breakdowns post as YouTube Shorts. <a href="https://www.youtube.com/channel/UCm-zZtqIVutiaAeiqM44-aA?sub_confirmation=1" target="_blank" rel="noopener">Subscribe</a></p>
     </section>
 
     <section id="trading-agent">
@@ -47,13 +75,21 @@
         Robinhood directly and explicitly confirm the order before it is sent. This
         repository does not store Robinhood credentials, API keys, or session tokens.
       </p>
-      <p>See <a href="docs/robinhood-trading-agent.md">docs/robinhood-trading-agent.md</a> for setup and the safety model.</p>
+      <p>See <a href="https://github.com/brendan1551-pixel/www.customaibots.com/blob/main/docs/robinhood-trading-agent.md">docs/robinhood-trading-agent.md</a> for setup and the safety model.</p>
+    </section>
+
+    <section id="contact">
+      <h2>Want an agent like this?</h2>
+      <p>We build custom agents for trading research, alerts, and MCP integrations.</p>
+      <!-- TODO: add an email signup form here once a provider (e.g. Buttondown, ConvertKit, Formspree) is chosen. -->
+      <p class="actions"><a class="btn" href="https://www.youtube.com/channel/UCm-zZtqIVutiaAeiqM44-aA?sub_confirmation=1" target="_blank" rel="noopener">Subscribe on YouTube</a></p>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="container">
-      <p>&copy; <span id="year"></span> Custom AI Bots</p>
+      <p>&copy; <span id="year"></span> Custom AI Bots &middot; <a href="https://www.youtube.com/channel/UCm-zZtqIVutiaAeiqM44-aA" target="_blank" rel="noopener">YouTube</a></p>
+      <p>Not investment advice.</p>
     </div>
   </footer>
 

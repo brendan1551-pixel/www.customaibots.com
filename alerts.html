@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Highest-volume US stock tickers with relative volume, alert levels and the news behind each move.">
+<style>[hidden]{display:none!important}</style>
+<title>US Volume Leaders | Custom AI Bots</title>
+<link rel="canonical" href="https://agents.customsuperbots.com/alerts.html">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#2e7d32">
+<meta property="og:title" content="US Volume Leaders">
+<meta property="og:description" content="Highest-volume US stock tickers with relative volume, alert levels and the news behind each move.">
+<meta property="og:url" content="https://agents.customsuperbots.com/alerts.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+</head>
+<body>
+<style>
+/* Layout: one column, summary tiles, tab row, ranked horizontal-bar list with table toggle */
+:root {
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --bar: #2a78d6;
+  --bar-hover: #1c5cab;
+  --up: #006300;
+  --down: #b42f2f;
+  --warn-bg: #fdf3dc;
+  --warn-ink: #7a5200;
+  --warn-icon: #fab219;
+  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --bar: #3987e5; --bar-hover: #6da7ec; --up: #0ca30c; --down: #e66767;
+    --warn-bg: #3a2f14; --warn-ink: #f5cf7a; --warn-icon: #fab219;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --bar: #3987e5; --bar-hover: #6da7ec; --up: #0ca30c; --down: #e66767;
+  --warn-bg: #3a2f14; --warn-ink: #f5cf7a; --warn-icon: #fab219;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+.topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px 16px; padding: 12px 16px; background: var(--surface); border-bottom: 1px solid var(--border); font-family: var(--font); font-size: 14px; }
+.topbar a { color: var(--ink-2); text-decoration: none; font-weight: 600; }
+.topbar a:hover { color: var(--ink); text-decoration: underline; }
+.topbar a:focus-visible { outline: 2px solid var(--bar); outline-offset: 2px; }
+body { background: var(--page); color: var(--ink); font-family: var(--font); font-size: 14px; line-height: 1.45; }
+.wrap { max-width: 960px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 48px; display: flex; flex-direction: column; gap: 20px; }
+header { display: flex; flex-direction: column; gap: 4px; }
+.eyebrow { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+h1 { margin: 0; font-size: 26px; font-weight: 650; text-wrap: balance; }
+.sub { color: var(--ink-2); margin: 0; max-width: 65ch; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tile .label { color: var(--ink-2); font-size: 13px; }
+.tile .value { font-size: 26px; font-weight: 600; }
+.tile .note { color: var(--muted); font-size: 12.5px; }
+
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.tabs { display: inline-flex; background: var(--page); border: 1px solid var(--border); border-radius: 8px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+.tabs button, .viewtoggle button { font: inherit; font-size: 13px; border: 0; background: transparent; color: var(--ink-2); padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 0 0 1px var(--border); }
+.tabs button:focus-visible, .viewtoggle button:focus-visible, .row:focus-visible { outline: 2px solid var(--bar); outline-offset: 2px; }
+.viewtoggle button { border: 1px solid var(--border); }
+.viewtoggle button:hover, .tabs button:hover { color: var(--ink); }
+.caption { color: var(--ink-2); font-size: 13px; margin: 0; }
+
+.chart { display: flex; flex-direction: column; position: relative; }
+.axis-row, .row { display: grid; grid-template-columns: 64px minmax(0, 1fr) 250px; gap: 10px; align-items: center; }
+.axis-row { color: var(--muted); font-size: 11.5px; padding-bottom: 4px; font-variant-numeric: tabular-nums; }
+.ticks { position: relative; height: 16px; }
+.ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.ticks span:first-child { transform: none; }
+.ticks span:last-child { transform: translateX(-100%); }
+.row { min-height: 30px; padding-block: 3px; border-radius: 6px; cursor: default; }
+.row:hover, .row:focus-visible { background: color-mix(in srgb, var(--bar) 6%, transparent); }
+.tk { font-weight: 600; font-size: 13px; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 4px; min-width: 0; }
+.track { position: relative; height: 20px; }
+.gridline { position: absolute; top: -3px; bottom: -3px; width: 1px; background: var(--grid); }
+.gridline.base { background: var(--axis); }
+.bar { position: absolute; left: 0; top: 0; height: 20px; background: var(--bar); border-radius: 0 4px 4px 0; transition: width .35s ease; }
+.row:hover .bar, .row:focus-visible .bar { background: var(--bar-hover); }
+.vlabel { position: absolute; top: 0; height: 20px; display: flex; align-items: center; font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 6px; }
+.vlabel.inside { color: #fff; padding-left: 0; padding-right: 6px; transform: translateX(-100%); }
+.meta { display: flex; justify-content: flex-end; gap: 10px; font-variant-numeric: tabular-nums; font-size: 12.5px; white-space: nowrap; }
+.price { color: var(--ink-2); }
+.chg { min-width: 70px; text-align: right; font-weight: 600; }
+.chg.up { color: var(--up); }
+.chg.down { color: var(--down); }
+.rv { color: var(--ink-2); min-width: 46px; text-align: right; }
+.tier { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 1px 8px 1px 6px; font-size: 11.5px; font-weight: 650; white-space: nowrap; border: 1px solid var(--border); color: var(--ink); background: var(--surface); }
+.tier svg { width: 12px; height: 12px; flex: none; }
+.tier.none { visibility: hidden; }
+.caution { font-size: 11px; color: var(--warn-ink); background: var(--warn-bg); border-radius: 4px; padding: 0 5px; font-weight: 600; }
+.alerts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }
+.alert { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.alert .top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.alert .name { font-weight: 700; font-size: 15px; }
+.alert .stats { color: var(--ink-2); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.alert .why { font-size: 13px; color: var(--ink); margin: 0; }
+.alert .why a { color: var(--ink-2); }
+.alert .why.none { color: var(--muted); }
+h2 { margin: 0; font-size: 17px; font-weight: 650; }
+.section-head { display: flex; flex-direction: column; gap: 2px; }
+.flag { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; flex: none; }
+.flag svg { width: 14px; height: 14px; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 14px; color: var(--ink-2); font-size: 12.5px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; background: var(--warn-bg); color: var(--warn-ink); border-radius: 999px; padding: 1px 8px; font-size: 11.5px; font-weight: 600; white-space: nowrap; }
+
+.tip { position: absolute; z-index: 5; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.14); min-width: 180px; font-variant-numeric: tabular-nums; }
+.tip .t { font-weight: 650; font-size: 13.5px; margin-bottom: 4px; display: flex; gap: 8px; align-items: center; }
+.tip dl { margin: 0; display: grid; grid-template-columns: auto auto; gap: 2px 14px; }
+.tip dt { color: var(--muted); }
+.tip dd { margin: 0; text-align: right; }
+
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 13px; }
+th, td { text-align: right; padding: 7px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+th:nth-child(-n+2), td:nth-child(-n+2) { text-align: left; }
+th { color: var(--muted); font-weight: 600; font-size: 12px; }
+td.up { color: var(--up); font-weight: 600; } td.down { color: var(--down); font-weight: 600; }
+
+footer { color: var(--muted); font-size: 12px; max-width: 75ch; }
+footer p { margin: 0 0 6px; }
+
+@media (max-width: 560px) {
+  .axis-row, .row { grid-template-columns: 54px minmax(0, 1fr) 70px; gap: 8px; }
+  .axis-row, .row { grid-template-columns: 54px minmax(0, 1fr) 84px; }
+  .price, .meta .chip, .rv, .chg-h { display: none; }
+  .chg { display: none; }
+  .chg { min-width: 0; }
+  h1 { font-size: 22px; }
+}
+@media (prefers-reduced-motion: reduce) { .bar { transition: none; } }
+</style>
+
+<div class="topbar">
+  <a href="/">&larr; Custom AI Bots</a>
+  <a href="https://www.youtube.com/channel/UCm-zZtqIVutiaAeiqM44-aA?sub_confirmation=1" target="_blank" rel="noopener">Subscribe on YouTube</a>
+</div>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">US equities · Friday close, Oct 2, 2026 · 4:15 pm ET</span>
+    <h1>Highest-volume tickers</h1>
+    <p class="sub">The 20 most actively traded US tickers by shares, plus the day's biggest gainers and losers with real volume behind them. Each ticker gets an alert level from relative volume, price move and dollar volume, with the news behind the move where one was found.</p>
+  </header>
+
+  <section class="tiles" aria-label="Summary">
+    <div class="tile"><span class="label">Top ticker by volume</span><span class="value" id="t1v"></span><span class="note" id="t1n"></span></div>
+    <div class="tile"><span class="label">Combined volume, top 20</span><span class="value" id="t2v"></span><span class="note">shares traded</span></div>
+    <div class="tile"><span class="label">Biggest move among the top 20</span><span class="value" id="t3v"></span><span class="note" id="t3n"></span></div>
+    <div class="tile"><span class="label">Alerts across all lists</span><span class="value" id="t4v"></span><span class="note" id="t4n"></span></div>
+  </section>
+
+  <section class="section-head">
+    <h2>Alerts</h2>
+    <p class="sub" id="alertsub"></p>
+  </section>
+  <section class="alerts" id="alerts" aria-label="Alerts"></section>
+
+  <section class="panel">
+    <div class="controls">
+      <div class="tabs" role="tablist" aria-label="List">
+        <button role="tab" id="tab-active" data-k="active" aria-selected="true">Most active</button>
+        <button role="tab" id="tab-gainers" data-k="gainers" aria-selected="false">Gainers</button>
+        <button role="tab" id="tab-losers" data-k="losers" aria-selected="false">Losers</button>
+      </div>
+      <div class="viewtoggle"><button id="viewbtn" type="button" aria-pressed="false">Show table</button></div>
+    </div>
+    <p class="caption" id="caption"></p>
+    <div class="chart" id="chart" role="list"></div>
+    <div class="tablewrap" id="tablewrap" hidden></div>
+    <div class="legend">
+      <span id="lg-tiers"></span>
+      <span><span class="flag" aria-hidden="true">__WARN__</span>Moved 20% or more</span>
+      <span>RVOL = volume ÷ 20-day average</span>
+      <span><span class="chip">&lt; $1</span>Sub-$1 share price</span>
+      <span>Bar length = shares traded</span>
+    </div>
+  </section>
+
+  <footer>
+    <p>Source: Alpha Vantage top gainers, losers and most-active feed, last updated 2026-10-02 16:15:59 ET. Volume is share count, not dollar value, so sub-$1 stocks rank high on very little money.</p>
+    <p>Alert levels. High: RVOL 5× or more, a move of 10% or more, at least $20M traded and a price of $1 or more. Watch: RVOL 3× or more with $5M traded, or a 20% move with $20M traded, or RVOL 2× or more with $1B traded. Stocks under $1 can reach Watch but never High. Caution marks a share issuance or reverse split. RVOL is from Alpha Vantage daily history; the free tier's 25-request daily limit left some tickers without it ("RVOL n/a"). News is from Benzinga, CNBC, Investing.com and company releases dated Sep 30 to Oct 2.</p>
+    <p>Gainers and losers are limited to tickers that traded at least 1 million shares, which drops thinly traded warrants and rights. This is market data, not investment advice.</p>
+  </footer>
+</div>
+
+<script>
+const RAW = {
+  active: [["NIVF",0.129,27.7228,295987341],["FNGR",0.248,41.1497,248338845],["AMOD",3.49,198.2906,189656005],["FLUX",0.64,57.4029,163190543],["SCNX",0.1588,-10.3331,161577382],["NKE",33.895,-3.5704,141705880],["SDEV",7.59,107.377,137759266],["NVDA",233.95,1.3385,134190395],["QTEX",1.1,40.1988,124386618],["SPCX",158.96,7.3546,119079817],["SOXS",29.7138,-6.4427,99664491],["INTC",119.33,-0.5583,94640580],["SCKT",0.7073,30.9815,89159843],["BITO",11.28,-0.4413,88980099],["TSLL",9.8,9.2531,85838187],["NVD",3.45,-2.5424,83965880],["HYG",76.915,0.0195,82301653],["CTVA",11.92,-5.171,78588896],["NU",13.43,1.0534,77849972],["TSLG",4.91,9.3541,75275529]],
+  gainers: [["AMOD",3.49,198.2906,189656005],["SDEV",7.59,107.377,137759266],["AMODW",0.0286,104.2857,2854462],["XRPN",39.42,68.2458,9126952],["FLUX",0.64,57.4029,163190543],["AIXI",1.81,48.9712,73444734],["ZNB",1.54,42.5926,27384336],["CYCU",3.82,42.0074,48822748],["FNGR",0.248,41.1497,248338845]],
+  losers: [["DRCT",0.8958,-40.6755,1052297],["SMX",3.82,-37.987,2302540],["FHTX",2.02,-30.8219,2499023]]
+};
+const RVOL = {NIVF:6.06,FNGR:7.94,AMOD:196.43,FLUX:960.16,SCNX:97.88,NKE:3.72,SDEV:7.59,NVDA:1.23,QTEX:54.69,SPCX:1.27,NU:1.02,SMX:40.21,BITO:1.15};
+const NEWS = {
+  AMOD: {c:"Closed a roughly $250M private placement paid in 3,170 bitcoin, which restored Nasdaq listing compliance. The stock jumped 61% after hours Thursday and kept going.", src:"Benzinga", url:"https://www.benzinga.com/markets/equities/26/10/62126197/alpha-modus-holdings-shares-after-hours-bitcoin-private-placement", caution:"Share issuance"},
+  FLUX: {c:"The board rejected Solidion Technology's unsolicited all-cash takeover offer, made public Sep 30, as too low.", src:"Investing.com", url:"https://www.investing.com/news/company-news/flux-power-rejects-solidion-acquisition-proposal-93CH-4929794"},
+  CYCU: {c:"Regained Nasdaq's $1 minimum after a 1-for-8 reverse split, and repeated news of a $54.6M state contract.", src:"Benzinga", url:"https://www.benzinga.com/news/legal/26/10/62146436/why-is-cycurion-gaining-friday", caution:"Reverse split"},
+  NKE: {c:"Fiscal Q1 revenue missed estimates while earnings beat, with layoffs and a cautious outlook.", src:"CNBC", url:"https://www.cnbc.com/2026/10/02/stocks-making-the-biggest-moves-premarket-nike-on-semiconductor-synaptics-vylor-more.html"},
+  SDEV: {c:"The company said on Oct 1 it knows of no undisclosed news behind the unusual trading.", src:"Company release", url:"https://www.theglobeandmail.com/investing/markets/stocks/SDEV-A/pressreleases/4890129/stablecoin-development-addresses-recent-unusual-stock-trading-activity/"}
+};
+function tierOf(d) {
+  const r = RVOL[d.t] ?? null, dv = d.v*d.p, mv = Math.abs(d.c);
+  if (r !== null && r >= 5 && mv >= 10 && dv >= 2e7 && d.p >= 1) return "High";
+  if ((r !== null && r >= 3 && dv >= 5e6) || (mv >= 20 && dv >= 2e7) || (r !== null && r >= 2 && dv >= 1e9)) return "Watch";
+  return "";
+}
+const TIER_ICON = {
+  High: '<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5.5" fill="#d03b3b"/><path d="M6 3.2v3.3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="6" cy="8.6" r=".8" fill="#fff"/></svg>',
+  Watch: '<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5.5" fill="#fab219"/><circle cx="6" cy="6" r="2" fill="#0b0b0b"/></svg>'
+};
+const tierChip = t => t ? `<span class="tier">${TIER_ICON[t]}${t}</span>` : `<span class="tier none" aria-hidden="true">–</span>`;
+const fmtR = d => RVOL[d.t] != null ? (RVOL[d.t] >= 100 ? Math.round(RVOL[d.t]) : RVOL[d.t].toFixed(1)) + "×" : "n/a";
+const CAPTIONS = {
+  active: "The 20 most actively traded tickers, ranked by shares traded.",
+  gainers: "Top gainers that traded at least 1 million shares, ranked by shares traded.",
+  losers: "Top losers that traded at least 1 million shares, ranked by shares traded. Only three cleared the volume bar."
+};
+const WARN = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 15 14H1z" fill="var(--warn-icon)"/><path d="M8 6v3.6" stroke="#0b0b0b" stroke-width="1.6" stroke-linecap="round"/><circle cx="8" cy="11.6" r=".9" fill="#0b0b0b"/></svg>';
+document.querySelectorAll('.legend .flag').forEach(el => el.innerHTML = WARN);
+
+const data = {};
+for (const k in RAW) data[k] = RAW[k].map(([t,p,c,v]) => ({t,p,c,v})).sort((a,b) => b.v - a.v);
+
+const fmtVol = v => v >= 1e9 ? (v/1e9).toFixed(2)+"B" : v >= 1e6 ? (v/1e6).toFixed(v >= 1e8 ? 0 : 1)+"M" : (v/1e3).toFixed(0)+"K";
+const fmtFull = v => v.toLocaleString("en-US");
+const fmtPrice = p => "$" + (p < 1 ? p.toFixed(4) : p.toFixed(2));
+const fmtChg = c => (c > 0 ? "▲ +" : c < 0 ? "▼ " : "") + c.toFixed(1) + "%";
+const big = d => Math.abs(d.c) >= 20;
+const penny = d => d.p < 1;
+
+// Summary tiles from the most-active list
+(() => {
+  const a = data.active, top = a[0];
+  document.getElementById("t1v").textContent = top.t;
+  document.getElementById("t1n").textContent = fmtVol(top.v) + " shares at " + fmtPrice(top.p);
+  document.getElementById("t2v").textContent = (a.reduce((s,d)=>s+d.v,0)/1e9).toFixed(2) + "B";
+  const mover = a.reduce((m,d) => Math.abs(d.c) > Math.abs(m.c) ? d : m);
+  document.getElementById("t3v").textContent = mover.t + " " + (mover.c>0?"+":"") + mover.c.toFixed(0) + "%";
+  document.getElementById("t3n").textContent = fmtVol(mover.v) + " shares, closed at " + fmtPrice(mover.p);
+  const all = {}; for (const k in data) data[k].forEach(d => all[d.t] = d);
+  const list = Object.values(all).map(d => ({...d, tier: tierOf(d)})).filter(d => d.tier);
+  const hi = list.filter(d => d.tier === "High"), wa = list.filter(d => d.tier === "Watch");
+  document.getElementById("t4v").textContent = hi.length + " High · " + wa.length + " Watch";
+  document.getElementById("t4n").textContent = "from " + Object.keys(all).length + " tickers screened";
+  document.getElementById("lg-tiers").innerHTML = tierChip("High") + " " + tierChip("Watch") + " alert level";
+  list.sort((x,y) => (x.tier===y.tier ? 0 : x.tier==="High" ? -1 : 1) || (y.v*y.p - x.v*x.p));
+  document.getElementById("alertsub").textContent = `${hi.length} High and ${wa.length} Watch alerts, High first, then by dollar volume.`;
+  document.getElementById("alerts").innerHTML = list.map(d => {
+    const n = NEWS[d.t];
+    return `<article class="alert"><div class="top"><span class="name">${d.t}</span>${tierChip(d.tier)}${n && n.caution ? `<span class="caution">${n.caution}</span>` : ""}${penny(d)?'<span class="chip">&lt; $1</span>':""}</div>
+      <div class="stats">${fmtPrice(d.p)} · <span class="chg ${d.c>=0?"up":"down"}" style="display:inline">${fmtChg(d.c)}</span> · RVOL ${fmtR(d)} · $${fmtVol(d.v*d.p)} traded</div>
+      ${n ? `<p class="why">${n.c} <a href="${n.url}" target="_blank" rel="noopener">${n.src}</a></p>` : `<p class="why none">No news found for this move.</p>`}</article>`;
+  }).join("");
+})();
+
+function niceScale(v) {
+  const mag = Math.pow(10, Math.floor(Math.log10(v)) - 1);
+  for (const m of [1,2,2.5,5,10,20,25,50,100]) {
+    const step = m*mag, n = Math.ceil(v/step);
+    if (n <= 5) return { max: n*step, step };
+  }
+}
+
+const chart = document.getElementById("chart");
+const tablewrap = document.getElementById("tablewrap");
+let tip = null, current = "active";
+
+function render(k) {
+  current = k;
+  const rows = data[k];
+  const { max, step } = niceScale(rows[0].v);
+  const ticks = []; for (let t = 0; t <= max + 1; t += step) ticks.push(t);
+  document.getElementById("caption").textContent = CAPTIONS[k];
+
+  let html = '<div class="axis-row" aria-hidden="true"><span></span><div class="ticks">' +
+    ticks.map(t => `<span style="left:${t/max*100}%">${t===0?"0":fmtVol(t)}</span>`).join("") +
+    '</div><span class="meta"><span class="rv">RVOL</span><span class="price">Close</span><span class="chg chg-h">Change</span><span class="tier none">Watch</span></span></div>';
+
+  rows.forEach((d, i) => {
+    const w = d.v/max*100;
+    const inside = w > 72;
+    const label = `${d.t}: ${fmtFull(d.v)} shares, closed ${fmtPrice(d.p)}, ${d.c>0?"up":"down"} ${Math.abs(d.c).toFixed(1)}%` + (big(d)?", moved 20% or more":"") + (penny(d)?", under $1":"") + (tierOf(d)?", "+tierOf(d)+" alert":"") + ", relative volume " + fmtR(d);
+    html += `<div class="row" role="listitem" tabindex="0" data-i="${i}" aria-label="${label}">
+      <span class="tk">${d.t}${big(d) ? `<span class="flag" title="Moved 20% or more">${WARN}</span>` : ""}</span>
+      <div class="track">
+        ${ticks.map((t,j) => `<span class="gridline${j===0?" base":""}" style="left:${t/max*100}%"></span>`).join("")}
+        <span class="bar" style="width:${w}%"></span>
+        <span class="vlabel${inside?" inside":""}" style="left:${w}%">${fmtVol(d.v)}</span>
+      </div>
+      <span class="meta"><span class="rv">${fmtR(d)}</span><span class="price">${fmtPrice(d.p)}</span><span class="chg ${d.c>=0?"up":"down"}">${fmtChg(d.c)}</span>${tierChip(tierOf(d))}</span>
+    </div>`;
+  });
+  html += '<div class="tip" id="tip" hidden></div>';
+  chart.innerHTML = html;
+  tip = document.getElementById("tip");
+
+  tablewrap.innerHTML = `<table><thead><tr><th>Rank</th><th>Ticker</th><th>Shares traded</th><th>Close</th><th>Change</th><th>RVOL</th><th>Alert</th><th>Flags</th></tr></thead><tbody>` +
+    rows.map((d,i) => `<tr><td>${i+1}</td><td><strong>${d.t}</strong></td><td>${fmtFull(d.v)}</td><td>${fmtPrice(d.p)}</td><td class="${d.c>=0?"up":"down"}">${fmtChg(d.c)}</td><td>${fmtR(d)}</td><td>${tierOf(d)||"—"}</td><td>${[NEWS[d.t]&&NEWS[d.t].caution||"", big(d)?"20%+ move":"", penny(d)?"Under $1":""].filter(Boolean).join(", ") || "—"}</td></tr>`).join("") +
+    `</tbody></table>`;
+}
+
+function showTip(row) {
+  const d = data[current][+row.dataset.i];
+  const share = d.v / data[current].reduce((s,x)=>s+x.v,0) * 100;
+  tip.innerHTML = `<div class="t">${d.t}${big(d)?`<span class="flag">${WARN}</span>`:""}${penny(d)?'<span class="chip">&lt; $1</span>':""}</div>
+    <dl><dt>Shares traded</dt><dd>${fmtFull(d.v)}</dd>
+    <dt>Share of this list</dt><dd>${share.toFixed(1)}%</dd>
+    <dt>Close</dt><dd>${fmtPrice(d.p)}</dd>
+    <dt>Change</dt><dd class="chg ${d.c>=0?"up":"down"}">${fmtChg(d.c)}</dd>
+    <dt>Approx. dollar volume</dt><dd>$${fmtVol(d.v*d.p)}</dd>
+    <dt>Relative volume</dt><dd>${fmtR(d)}</dd>
+    <dt>Alert</dt><dd>${tierOf(d) || "None"}</dd></dl>${NEWS[d.t] ? `<div style="margin-top:6px;max-width:240px;color:var(--ink-2)">${NEWS[d.t].c}</div>` : ""}`;
+  tip.hidden = false;
+  const cr = chart.getBoundingClientRect(), rr = row.getBoundingClientRect();
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = Math.min(Math.max(0, cr.width/2 - tw/2 + 40), cr.width - tw);
+  let y = rr.top - cr.top - th - 6;
+  if (y < 0) y = rr.bottom - cr.top + 6;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+chart.addEventListener("mouseover", e => { const r = e.target.closest(".row"); if (r) showTip(r); });
+chart.addEventListener("mouseleave", () => { if (tip) tip.hidden = true; });
+chart.addEventListener("focusin", e => { const r = e.target.closest(".row"); if (r) showTip(r); });
+chart.addEventListener("focusout", () => { if (tip) tip.hidden = true; });
+
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x === b ? "true" : "false"));
+  render(b.dataset.k);
+  try { localStorage.setItem("vl-tab", b.dataset.k); } catch (e) {}
+}));
+const viewbtn = document.getElementById("viewbtn");
+viewbtn.addEventListener("click", () => {
+  const showTable = tablewrap.hidden;
+  tablewrap.hidden = !showTable; chart.hidden = showTable;
+  viewbtn.textContent = showTable ? "Show chart" : "Show table";
+  viewbtn.setAttribute("aria-pressed", String(showTable));
+});
+
+let start = "active";
+try { const s = localStorage.getItem("vl-tab"); if (s && data[s]) start = s; } catch (e) {}
+document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x.dataset.k === start ? "true" : "false"));
+render(start);
+</script>
+
+</body>
+</html>
