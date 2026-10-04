@@ -2,7 +2,9 @@
 
 Static site for Custom AI Bots: custom AI agents, MCP integrations, and a free daily US stock volume alerts screen. Hosted on GitHub Pages.
 
-Live site: https://agents.customsuperbots.com
+Main site: https://www.customsuperbots.com
+
+This repo is served by GitHub Pages at https://agents.customsuperbots.com (see `CNAME`), which hosts the alerts page and agent docs.
 
 ## Files
 
