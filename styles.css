@@ -96,3 +96,37 @@ code {
   color: var(--muted);
   font-size: 0.9rem;
 }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.25rem 0 0;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn:hover { filter: brightness(1.1); }
+
+.btn:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--fg);
+}
+
+section a { color: var(--accent); }
+section a.btn { color: var(--bg); }
+section a.btn-secondary { color: var(--fg); }
+
+.site-footer a { color: inherit; }
+.site-footer p { margin: 0.25rem 0; }
