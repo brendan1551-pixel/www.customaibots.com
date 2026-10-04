@@ -14,6 +14,7 @@ This repo is served by GitHub Pages at https://agents.customsuperbots.com (see `
 - `robots.txt`, `sitemap.xml`: crawler hints
 - `CNAME`: custom domain for GitHub Pages
 - `docs/`, `mcp/`: Robinhood trading agent (MCP) docs and config
+- `cart-recovery/`: Shopify abandoned-cart bot for eacjyd-yz.myshopify.com (Next.js + BullMQ + ManyChat). Deployed separately on Vercel and a worker host, see its README
 
 ## To do
 
