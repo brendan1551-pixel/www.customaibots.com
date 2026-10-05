@@ -2,9 +2,9 @@
 
 Static site for Custom AI Bots: custom AI agents, MCP integrations, and a free daily US stock volume alerts screen. Hosted on GitHub Pages.
 
-Main site: https://www.customsuperbots.com
+Live at https://www.customsuperbots.com, served by GitHub Pages (see `CNAME`).
 
-This repo is served by GitHub Pages at https://agents.customsuperbots.com (see `CNAME`), which hosts the alerts page and agent docs.
+DNS: `www` is a CNAME to `brendan1551-pixel.github.io`. The apex `customsuperbots.com` should use GitHub Pages A records (185.199.108.153, .109.153, .110.153, .111.153) so it redirects to `www`.
 
 ## Files
 

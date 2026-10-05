@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://agents.customsuperbots.com/sitemap.xml
+Sitemap: https://www.customsuperbots.com/sitemap.xml
