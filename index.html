@@ -81,7 +81,15 @@
     <section id="contact">
       <h2>Want an agent like this?</h2>
       <p>We build custom agents for trading research, alerts, and MCP integrations.</p>
-      <!-- TODO: add an email signup form here once a provider (e.g. Buttondown, ConvertKit, Formspree) is chosen. -->
+      <form id="signup" class="signup" method="post" target="_blank" hidden>
+        <label for="signup-email">Get the High alerts by email each trading day</label>
+        <div class="signup-row">
+          <input id="signup-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+          <input type="hidden" name="embed" value="1" />
+          <button class="btn" type="submit">Subscribe</button>
+        </div>
+        <p class="signup-note">Free. Unsubscribe anytime. Not investment advice.</p>
+      </form>
       <p class="actions"><a class="btn" href="https://www.youtube.com/channel/UCm-zZtqIVutiaAeiqM44-aA?sub_confirmation=1" target="_blank" rel="noopener">Subscribe on YouTube</a></p>
     </section>
   </main>
@@ -95,6 +103,14 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Buttondown username (buttondown.com/<username>). The signup form stays hidden until this is set.
+    const BUTTONDOWN_USER = '';
+    if (BUTTONDOWN_USER) {
+      const form = document.getElementById('signup');
+      form.action = 'https://buttondown.com/api/emails/embed-subscribe/' + encodeURIComponent(BUTTONDOWN_USER);
+      form.hidden = false;
+    }
   </script>
 </body>
 </html>

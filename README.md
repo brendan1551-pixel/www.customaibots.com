@@ -17,5 +17,5 @@ DNS: `www` is a CNAME to `brendan1551-pixel.github.io`. The apex `customsuperbot
 
 ## To do
 
-- [ ] Choose an email provider for the signup form (see the comment in the `#contact` section of `index.html`)
+- [ ] Create a Buttondown account, then set `BUTTONDOWN_USER` near the bottom of `index.html` to turn on the signup form
 - [ ] Add a YouTube handle once one is set

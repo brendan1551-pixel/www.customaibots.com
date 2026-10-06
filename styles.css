@@ -130,3 +130,22 @@ section a.btn-secondary { color: var(--fg); }
 
 .site-footer a { color: inherit; }
 .site-footer p { margin: 0.25rem 0; }
+
+[hidden] { display: none !important; }
+
+.signup { margin: 1.25rem 0 0; max-width: 32rem; }
+.signup label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+.signup-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.signup input[type="email"] {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--muted);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--fg);
+  font: inherit;
+}
+.signup input[type="email"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.signup button.btn { cursor: pointer; font: inherit; font-weight: 600; }
+.signup-note { color: var(--muted); font-size: 0.9rem; margin: 0.5rem 0 0; }
